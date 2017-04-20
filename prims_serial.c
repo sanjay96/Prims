@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#include <omp.h>
 #include <time.h>
 #include <sys/time.h>
 #include <math.h>
@@ -119,9 +118,7 @@ int prims()
 	int minValue,minNode,minNodeFather;
 	ndata=malloc(numNode * sizeof(*ndata));
 	for (temp=0; temp<numNode; temp++) { ndata[temp] = malloc(5 * sizeof(int)); }
-	
-	/*This table will be used during the calculations to hold temporary data. */	
-	omp_set_num_threads(numberThreads);		
+	/*This table will be used during the calculations to hold temporary data. */			
 	for(tempI=0;tempI<numNode;tempI++)
 	{
 		for(tempJ=0;tempJ<5;tempJ++)
@@ -139,7 +136,6 @@ int prims()
 	Column 3: Node with which minValue is found.
 	Column 4: Node that will be its father in the tree.
 	*/
-	#pragma omp parallel for
 	for(tempI=0;tempI<numNode;tempI++)
 		for(tempJ=0;tempJ<numNode;tempJ++)
 			graphTree[tempI][tempJ]=0;
@@ -186,7 +182,7 @@ int prims()
 
 		tempCounter2=0;
 		globalMinValue = maxWeight+1;
-		#pragma omp single
+
 		for( tempCounter1=0; tempCounter1<numNode; tempCounter1++ )
 		{
 			if(ndata[tempCounter1][1]==1)
